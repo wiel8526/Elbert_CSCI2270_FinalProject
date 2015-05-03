@@ -180,11 +180,9 @@ int Person::numPairSimilar(string str1, string str2, int strLen)
         string currentPair1 = str1.substr(index1,2);
         string currentPair2 = str2.substr(index1,2);
 
-        cout << "Comparing " << currentPair1 << " and " << currentPair2 << endl;
 
         if(currentPair1 == currentPair2)
         {
-            cout << "Adding to counter" << endl;
             counter++;
         }
 
