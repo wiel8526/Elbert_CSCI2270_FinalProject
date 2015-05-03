@@ -44,9 +44,9 @@ void Person::addContact(string fullname, string Nickname, string numb, string Ad
 	newcontact->address = Address;
 	newcontact->previous = head;
 	newcontact->next = NULL;
-	
+
 	node* cursor = head;
-	
+
 	if(head == NULL){
 		head = newcontact;
 		return;
@@ -86,7 +86,7 @@ void Person::deleteContact(std::string NicName)
 		 node *temp2 = new node;
 		 while(temp1->next->nickname != NicName)//while head's temporary node's next node is not the one being looked for...
 		 {
-			 temp1 = temp1->next;//..head's temporary node is set to the next node 
+			 temp1 = temp1->next;//..head's temporary node is set to the next node
 		 }
 		 temp2 = temp1->next; // now temp1's next is the node that is to be deleted
 		 temp1->next = temp1->next->next;
@@ -116,7 +116,7 @@ void Person::findContact(std::string NicName)
 		cout<<"=========="<<endl;
 	}
 }
-// prints all nodes in the linked list and their information 
+// prints all nodes in the linked list and their information
 void Person::displayAllContacts()
 {
 	node *current = head;
@@ -137,6 +137,63 @@ void Person::displayAllContacts()
 	}
 	cout<<"=========="<<endl;
 }
+
+/*
+    This uses an algorithm to determine percentage of similarity
+    it looks like this:
+
+    similarity(s1,s2) = (2*(pairs(s1) *union* pairs(s2))) / (NumPairs(s1) + NumPairs(s2))
+*/
+
+int Person::string_similarity(string str1, string str2)
+{
+
+    //Makes sure that strLen is of the smaller string
+    int strLen = str1.size();
+    if(str2.size() < strLen)
+    {
+        strLen = str2.size();
+    }
+
+    float Num_Sim = numPairSimilar(str1, str2, strLen);
+
+    float Num_Pairs1 = str1.size()-1;
+    float Num_Pairs2 = str2.size()-1;
+
+    float percentage = 2*Num_Sim;
+    cout << percentage << endl;
+    percentage = percentage / (Num_Pairs1 + Num_Pairs2);
+    cout << Num_Pairs1 + Num_Pairs2 << endl;
+
+    return percentage*100;
+}
+
+int Person::numPairSimilar(string str1, string str2, int strLen)
+{
+    int index1 = 0;
+    int index2 = index1++;
+
+    int counter = 0;
+
+    for(int i = 0; i < strLen -1; i++)
+    {
+        string currentPair1 = str1.substr(index1,2);
+        string currentPair2 = str2.substr(index1,2);
+
+
+        if(currentPair1 == currentPair2)
+        {
+            counter++;
+        }
+
+        index1++;
+        index2++;
+    }
+
+    return counter;
+}
+
+
 //takes in the head node and a nickname to find a specific node.
 node *Person::searchList(node* node, string Nickname)
 {
@@ -146,6 +203,11 @@ node *Person::searchList(node* node, string Nickname)
 	else if(node->nickname == Nickname){
 		return node;
 	}
+	else if(string_similarity(node->nickname,Nickname) > 50)
+    {
+        cout << node->nickname << "is " << string_similarity(node->nickname,Nickname) << "% similar to " << Nickname << endl;
+        return node;
+    }
 	else{
 		return searchList(node->next, Nickname);
 	}
